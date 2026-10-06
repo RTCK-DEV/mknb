@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>Matataki</string>
+	<string>MKNB</string>
 	<key>CFBundleDisplayName</key>
-	<string>Matataki</string>
+	<string>MKNB</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.rtck.matataki</string>
+	<string>com.rtck.mknb</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>CFBundleShortVersionString</key>
 	<string>0.1.0</string>
 	<key>CFBundleExecutable</key>
-	<string>Matataki</string>
+	<string>MKNB</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>LSMinimumSystemVersion</key>

@@ -13,40 +13,40 @@ enum L10n {
     private static let strings: [String: [String: String]] = [
         "usage": [
             "en": """
-                  matataki — blink the MacBook keyboard backlight as a notification
+                  mknb — blink the MacBook keyboard backlight as a notification
 
                   usage:
-                    matataki get                        print brightness (0.0-1.0)
-                    matataki status                     print full state
-                    matataki set <0.0-1.0>              set brightness
-                    matataki auto [on|off]              get/set auto brightness (ALS)
-                    matataki ids                        list keyboard backlight IDs
-                    matataki blink [times] [fade] [hold]   blink (default: 2, 1.4s, 0.5s)
-                    matataki notify <title> [body]      Notification Center + blink
+                    mknb get                        print brightness (0.0-1.0)
+                    mknb status                     print full state
+                    mknb set <0.0-1.0>              set brightness
+                    mknb auto [on|off]              get/set auto brightness (ALS)
+                    mknb ids                        list keyboard backlight IDs
+                    mknb blink [times] [fade] [hold]   blink (default: 2, 1.4s, 0.5s)
+                    mknb notify <title> [body]      Notification Center + blink
                   """,
             "ja": """
-                  matataki — キーボードバックライトをゆっくり点滅させる通知ツール
+                  mknb — キーボードバックライトをゆっくり点滅させる通知ツール
 
                   使い方:
-                    matataki get                        現在の輝度 (0.0-1.0)
-                    matataki status                     状態をすべて表示
-                    matataki set <0.0-1.0>              輝度を設定
-                    matataki auto [on|off]              自動調整(ALS)の確認/切替
-                    matataki ids                        バックライトID一覧
-                    matataki blink [回数] [fade] [hold] 点滅（既定: 2回, 1.4秒, 0.5秒）
-                    matataki notify <タイトル> [本文]     通知センター + 点滅
+                    mknb get                        現在の輝度 (0.0-1.0)
+                    mknb status                     状態をすべて表示
+                    mknb set <0.0-1.0>              輝度を設定
+                    mknb auto [on|off]              自動調整(ALS)の確認/切替
+                    mknb ids                        バックライトID一覧
+                    mknb blink [回数] [fade] [hold] 点滅（既定: 2回, 1.4秒, 0.5秒）
+                    mknb notify <タイトル> [本文]     通知センター + 点滅
                   """,
             "zh": """
-                  matataki — 让 MacBook 键盘背光缓慢闪烁作为通知
+                  mknb — 让 MacBook 键盘背光缓慢闪烁作为通知
 
                   用法:
-                    matataki get                        显示当前亮度 (0.0-1.0)
-                    matataki status                     显示完整状态
-                    matataki set <0.0-1.0>              设置亮度
-                    matataki auto [on|off]              查看/切换自动亮度 (ALS)
-                    matataki ids                        列出背光键盘 ID
-                    matataki blink [次数] [fade] [hold]  闪烁 (默认: 2次, 1.4秒, 0.5秒)
-                    matataki notify <标题> [正文]         通知中心 + 闪烁
+                    mknb get                        显示当前亮度 (0.0-1.0)
+                    mknb status                     显示完整状态
+                    mknb set <0.0-1.0>              设置亮度
+                    mknb auto [on|off]              查看/切换自动亮度 (ALS)
+                    mknb ids                        列出背光键盘 ID
+                    mknb blink [次数] [fade] [hold]  闪烁 (默认: 2次, 1.4秒, 0.5秒)
+                    mknb notify <标题> [正文]         通知中心 + 闪烁
                   """,
         ],
         "err.framework": [

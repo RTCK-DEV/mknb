@@ -7,16 +7,16 @@ all: cli app
 
 cli:
 	mkdir -p build
-	swiftc -O -o build/matataki Sources/Shared/Backlight.swift Sources/CLI/main.swift
-	codesign -s - --force build/matataki 2>/dev/null || true
+	swiftc -O -o build/mknb Sources/Shared/Backlight.swift Sources/CLI/main.swift
+	codesign -s - --force build/mknb 2>/dev/null || true
 
 app:
 	./scripts/build.sh
 
 install: cli
 	mkdir -p $(PREFIX)
-	install -m 755 build/matataki $(PREFIX)/matataki
-	@echo "installed to $(PREFIX)/matataki"
+	install -m 755 build/mknb $(PREFIX)/mknb
+	@echo "installed to $(PREFIX)/mknb"
 
 clean:
 	rm -rf build

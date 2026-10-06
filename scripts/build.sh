@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build matataki CLI + Matataki.app (arm64, ad-hoc signed)
+# Build mknb CLI + MKNB.app (arm64, ad-hoc signed)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -7,28 +7,28 @@ BUILD=build
 rm -rf "$BUILD"
 mkdir -p "$BUILD"
 
-echo "==> building CLI: matataki"
-swiftc -O -o "$BUILD/matataki" Sources/Shared/Backlight.swift Sources/CLI/main.swift
-codesign -s - --force "$BUILD/matataki" 2>/dev/null || true
+echo "==> building CLI: mknb"
+swiftc -O -o "$BUILD/mknb" Sources/Shared/Backlight.swift Sources/CLI/main.swift
+codesign -s - --force "$BUILD/mknb" 2>/dev/null || true
 
-echo "==> building app binary: Matataki"
+echo "==> building app binary: MKNB"
 swiftc -O -target arm64-apple-macosx14.0 \
-    -o "$BUILD/MatatakiBin" Sources/Shared/Backlight.swift Sources/App/MatatakiApp.swift
+    -o "$BUILD/MKNBBin" Sources/Shared/Backlight.swift Sources/App/MKNBApp.swift
 
-echo "==> assembling Matataki.app"
-APP="$BUILD/Matataki.app"
+echo "==> assembling MKNB.app"
+APP="$BUILD/MKNB.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-mv "$BUILD/MatatakiBin" "$APP/Contents/MacOS/Matataki"
+mv "$BUILD/MKNBBin" "$APP/Contents/MacOS/MKNB"
 cp Info.plist "$APP/Contents/Info.plist"
 for d in Resources/*.lproj; do
     cp -R "$d" "$APP/Contents/Resources/"
 done
 # embed the CLI inside the app for convenience
-cp "$BUILD/matataki" "$APP/Contents/Resources/matataki"
+cp "$BUILD/mknb" "$APP/Contents/Resources/mknb"
 codesign -s - --force --deep "$APP" 2>/dev/null || true
 
 echo "==> zipping artifacts"
-( cd "$BUILD" && zip -qry Matataki.app.zip Matataki.app && zip -qj matataki.zip matataki )
+( cd "$BUILD" && zip -qry MKNB.app.zip MKNB.app && zip -qj mknb.zip mknb )
 
 echo "==> done"
 ls -la "$BUILD"

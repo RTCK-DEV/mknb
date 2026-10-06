@@ -55,7 +55,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Matataki")
+            Text("MKNB")
                 .font(.headline)
 
             if model.backlight == nil {
@@ -130,7 +130,7 @@ struct ContentView: View {
 }
 
 @main
-struct MatatakiApp: App {
+struct MKNBApp: App {
     @StateObject private var model = BacklightModel()
 
     var body: some Scene {
