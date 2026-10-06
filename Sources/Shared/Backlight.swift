@@ -1,5 +1,8 @@
 import Foundation
 
+/// Set from POSIX signal handlers so an interrupted blink still restores state.
+private var blinkInterrupted = false
+
 /// Thin wrapper over private CoreBrightness APIs.
 ///
 /// On modern macOS the convenience class `KeyboardBrightnessClient` accepts
@@ -20,6 +23,7 @@ public final class Backlight {
         public var suppressed: Bool
         public var saturated: Bool
         public var auto: Bool
+        public var idleDimmingSuspended: Bool
     }
 
     private typealias ActFn  = @convention(c) (NSObject, Selector, UnsafeMutablePointer<NSError?>) -> Bool
@@ -87,8 +91,15 @@ public final class Backlight {
         set { _ = unsafeBitCast(kb.method(for: sAuto), to: BoolB.self)(kb, sAuto, newValue, keyboardID) }
     }
 
+    private let sSuspG = NSSelectorFromString("isIdleDimmingSuspendedOnKeyboard:")
+
+    public var idleDimmingSuspended: Bool {
+        unsafeBitCast(kb.method(for: sSuspG), to: BoolF.self)(kb, sSuspG, keyboardID)
+    }
+
     public var status: Status {
-        Status(brightness: brightness, level: level, suppressed: suppressed, saturated: saturated, auto: auto)
+        Status(brightness: brightness, level: level, suppressed: suppressed,
+               saturated: saturated, auto: auto, idleDimmingSuspended: idleDimmingSuspended)
     }
 
     /// Suspend idle dimming (writes return Bool, fire-and-forget).
@@ -100,6 +111,7 @@ public final class Backlight {
     public func ramp(to target: Double, seconds: Double, steps: Int = 20) {
         let from = brightness
         for i in 1...steps {
+            if blinkInterrupted { return }
             brightness = from + (target - from) * Double(i) / Double(steps)
             Thread.sleep(forTimeInterval: seconds / Double(steps))
         }
@@ -107,22 +119,33 @@ public final class Backlight {
 
     /// Blink `times` times. Auto-brightness and idle dimming are suspended for
     /// the duration and restored afterwards; the saved brightness is always
-    /// faded back to at the end.
+    /// faded back to at the end — even if the process receives
+    /// SIGINT/SIGTERM/SIGHUP mid-blink.
     public func blink(times: Int = 2, fade: Double = 1.4, hold: Double = 0.5) {
         let saved = brightness
         let wasAuto = auto
+        blinkInterrupted = false
+        let flag: @convention(c) (Int32) -> Void = { _ in blinkInterrupted = true }
+        _ = signal(SIGINT, flag); _ = signal(SIGTERM, flag); _ = signal(SIGHUP, flag)
         if wasAuto { auto = false }
         suspendIdleDimming(true)
+        defer {
+            brightness = saved              // snap back; LED hardware fades anyway
+            suspendIdleDimming(false)
+            if wasAuto { auto = true }
+            _ = signal(SIGINT, SIG_DFL); _ = signal(SIGTERM, SIG_DFL); _ = signal(SIGHUP, SIG_DFL)
+        }
         let upTo = max(saved, 0.6)
         for i in 0..<times {
+            if blinkInterrupted { break }
             ramp(to: upTo, seconds: fade)
+            if blinkInterrupted { break }
             if i < times - 1 || saved < upTo { Thread.sleep(forTimeInterval: hold) }
             ramp(to: 0.0, seconds: fade)
+            if blinkInterrupted { break }
             Thread.sleep(forTimeInterval: hold)
         }
         ramp(to: saved, seconds: 0.6)
-        suspendIdleDimming(false)
-        if wasAuto { auto = true }
     }
 
     /// Fire a Notification Center notification and blink at the same time.

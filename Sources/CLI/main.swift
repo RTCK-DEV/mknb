@@ -89,7 +89,7 @@ do {
         print(String(format: "%.4f", bl.brightness))
     case "status":
         let s = bl.status
-        print("kbID=\(bl.keyboardID) brightness=\(s.brightness) level=\(s.level) suppressed=\(s.suppressed) saturated=\(s.saturated) auto=\(s.auto)")
+        print("kbID=\(bl.keyboardID) brightness=\(s.brightness) level=\(s.level) suppressed=\(s.suppressed) saturated=\(s.saturated) auto=\(s.auto) idleDimmingSuspended=\(s.idleDimmingSuspended)")
     case "ids":
         print(bl.keyboardID)
     case "set":
