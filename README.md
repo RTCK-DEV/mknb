@@ -31,6 +31,10 @@ xattr -d com.apple.quarantine mknb          # if downloaded via browser
 
 For the app: unzip `MKNB.app.zip`, move `MKNB.app` to `/Applications`.
 
+> **Launch at login**: enable the toggle from the copy installed in
+> `/Applications` (or a stable path). Registering from `build/` or a folder
+> that gets rebuilt/deleted makes macOS silently drop the login item.
+
 ## Usage
 
 ```sh

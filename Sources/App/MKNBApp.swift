@@ -49,9 +49,7 @@ final class BacklightModel: ObservableObject {
 
 struct ContentView: View {
     @ObservedObject var model: BacklightModel
-    @AppStorage("launchAtLogin") private var launchAtLogin = false {
-        didSet { updateLoginItem() }
-    }
+    @AppStorage("launchAtLogin") private var launchAtLogin = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -82,7 +80,9 @@ struct ContentView: View {
                     get: { model.auto },
                     set: { model.setAuto($0) }))
 
-                Toggle("Launch at login", isOn: $launchAtLogin)
+                Toggle("Launch at login", isOn: Binding(
+                    get: { launchAtLogin },
+                    set: { updateLoginItem($0) }))
 
                 Divider()
 
@@ -106,7 +106,10 @@ struct ContentView: View {
         }
         .padding()
         .frame(width: 280)
-        .onAppear { model.refresh() }
+        .onAppear {
+            model.refresh()
+            syncLoginToggle()
+        }
     }
 
     private var statusLine: String {
@@ -116,15 +119,24 @@ struct ContentView: View {
         return parts.joined(separator: " · ")
     }
 
-    private func updateLoginItem() {
+    /// Reflect the real BTM registration state in the toggle.
+    private func syncLoginToggle() {
+        launchAtLogin = (SMAppService.mainApp.status == .enabled)
+    }
+
+    private func updateLoginItem(_ want: Bool) {
         do {
-            if launchAtLogin {
+            if want {
                 try SMAppService.mainApp.register()
             } else {
                 try SMAppService.mainApp.unregister()
             }
         } catch {
-            launchAtLogin = false
+            FileHandle.standardError.write("login item error: \(error)\n".data(using: .utf8)!)
+        }
+        syncLoginToggle()
+        if want, SMAppService.mainApp.status == .requiresApproval {
+            SMAppService.openSystemSettingsLoginItems()
         }
     }
 }

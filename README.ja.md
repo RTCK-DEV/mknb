@@ -29,6 +29,10 @@ xattr -d com.apple.quarantine mknb          # ブラウザでDLした場合
 
 アプリ: `MKNB.app.zip` を解凍して `/Applications` へ。
 
+> **ログイン時に起動**: `/Applications`（または固定パス）に置いた状態で
+> トグルをONにしてください。`build/` など再ビルドで消える場所から登録すると
+> macOS がログイン項目を黙って破棄します。
+
 ## 使い方
 
 ```sh

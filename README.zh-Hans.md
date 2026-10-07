@@ -28,6 +28,9 @@ xattr -d com.apple.quarantine mknb          # 浏览器下载时
 
 应用：解压 `MKNB.app.zip`，把 `MKNB.app` 移到 `/Applications`。
 
+> **登录时启动**：请从 `/Applications`（或其他固定路径）中的副本打开开关。
+> 从 `build/` 等会被重建/删除的位置注册，macOS 会静默丢弃该登录项。
+
 ## 用法
 
 ```sh
